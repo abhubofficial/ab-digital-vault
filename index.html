@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AB DIGITAL VAULT</title>
+<meta name="description" content="Discover free AI tools, software, apps and digital resources at AB DIGITAL VAULT.">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --blue:#2878ff;
+  --light-blue:#4995ff;
+  --bg:#000;
+  --card:#090d14;
+  --border:#1a2739;
+  --text:#f5f7fb;
+  --muted:#8996a9;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  min-height:100vh;
+}
+
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+
+header{
+  height:76px;
+  padding:0 5%;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#030508;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  width:46px;
+  height:46px;
+  border-radius:9px;
+  overflow:hidden;
+  border:1px solid #253a59;
+  background:#000;
+  flex-shrink:0;
+}
+
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.brand-name{
+  font-size:19px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.brand-name span{color:var(--light-blue)}
+
+.header-label{
+  font-size:11px;
+  color:#8fa0b7;
+  letter-spacing:2px;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:235px 1fr;
+  min-height:calc(100vh - 76px);
+}
+
+.sidebar{
+  border-right:1px solid var(--border);
+  padding:30px 20px;
+  background:#030508;
+}
+
+.side-heading{
+  color:#65758d;
+  font-size:10px;
+  letter-spacing:2px;
+  font-weight:bold;
+  margin:12px 0 17px;
+}
+
+.nav-btn{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px;
+  border-radius:8px;
+  border:1px solid transparent;
+  background:transparent;
+  color:#aab6c8;
+  text-align:left;
+  cursor:pointer;
+  margin-bottom:5px;
+  font-size:13px;
+}
+
+.nav-btn:hover,.nav-btn.active{
+  background:#0c1b30;
+  border-color:#1d3b64;
+  color:#70aaff;
+}
+
+.side-info{
+  border-top:1px solid var(--border);
+  margin-top:28px;
+  padding-top:20px;
+}
+
+.info-line{
+  font-size:12px;
+  color:#9aa8ba;
+  margin:12px 0;
+  line-height:1.5;
+}
+
+.info-line strong{
+  display:block;
+  color:#e7edf7;
+  font-size:12px;
+}
+
+main{
+  padding:38px 5%;
+  min-width:0;
+  max-width:1500px;
+  width:100%;
+  margin:0 auto;
+}
+
+.hero{
+  padding:36px 0 28px;
+}
+
+.eyebrow{
+  color:var(--light-blue);
+  font-size:11px;
+  font-weight:bold;
+  letter-spacing:3px;
+  margin-bottom:17px;
+}
+
+.hero h1{
+  font-size:clamp(30px,5vw,49px);
+  line-height:1.15;
+  letter-spacing:-1.5px;
+  max-width:750px;
+  margin-bottom:17px;
+}
+
+.hero h1 span{color:var(--light-blue)}
+
+.hero p{
+  color:var(--muted);
+  max-width:600px;
+  font-size:14px;
+  line-height:1.8;
+}
+
+.search-wrap{
+  margin-top:28px;
+  max-width:700px;
+  position:relative;
+}
+
+.search-wrap input{
+  width:100%;
+  padding:17px 18px 17px 48px;
+  background:#090e17;
+  border:1px solid #243750;
+  border-radius:10px;
+  outline:none;
+  color:white;
+  font-size:14px;
+}
+
+.search-wrap input:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px #2878ff18;
+}
+
+.search-icon{
+  position:absolute;
+  left:17px;
+  top:15px;
+  color:#8295b1;
+  font-size:19px;
+}
+
+.info-strip{
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+  gap:12px;
+  padding:19px 0 27px;
+  border-bottom:1px solid var(--border);
+}
+
+.info-box{
+  flex:1 1 150px;
+  min-width:0;
+  padding:14px;
+  background:#080d15;
+  border:1px solid var(--border);
+  border-radius:9px;
+}
+
+.info-box strong{
+  display:block;
+  font-size:12px;
+  margin-bottom:5px;
+}
+
+.info-box span{
+  font-size:11px;
+  color:var(--muted);
+}
+
+.section-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  flex-wrap:wrap;
+  margin:30px 0 20px;
+}
+
+.section-top h2{
+  font-size:21px;
+}
+
+.count{
+  color:#8795aa;
+  font-size:12px;
+}
+
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-bottom:23px;
+}
+
+.filter{
+  padding:10px 15px;
+  border:1px solid #24334a;
+  background:#080d15;
+  color:#aab6c8;
+  border-radius:7px;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.filter.active,.filter:hover{
+  background:#102746;
+  border-color:var(--blue);
+  color:#83b5ff;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+}
+
+.resource{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  transition:.2s;
+  min-width:0;
+}
+
+.resource:hover{
+  transform:translateY(-3px);
+  border-color:#315c91;
+}
+
+.resource-image{
+  height:155px;
+  background:#101827;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.resource-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.image-placeholder{
+  font-size:34px;
+  color:#3979ce;
+  font-weight:bold;
+}
+
+.resource-body{padding:17px}
+
+.category-tag{
+  display:inline-block;
+  padding:6px 9px;
+  border-radius:5px;
+  background:#102542;
+  color:#80b3ff;
+  font-size:10px;
+  margin-bottom:12px;
+}
+
+.resource h3{
+  font-size:16px;
+  margin-bottom:9px;
+  overflow-wrap:anywhere;
+}
+
+.resource p{
+  color:#929fb2;
+  font-size:12px;
+  line-height:1.7;
+  min-height:41px;
+  overflow-wrap:anywhere;
+}
+
+.resource-link{
+  display:block;
+  text-align:center;
+  margin-top:17px;
+  padding:11px;
+  background:var(--blue);
+  color:white;
+  border-radius:7px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.resource-link:hover{background:#438dff}
+
+.status{
+  text-align:center;
+  padding:45px 15px;
+  color:#93a1b5;
+  font-size:13px;
+  line-height:1.8;
+  grid-column:1/-1;
+}
+
+.status strong{
+  display:block;
+  color:#e5edf8;
+  font-size:17px;
+  margin-bottom:7px;
+}
+
+footer{
+  border-top:1px solid var(--border);
+  margin-top:55px;
+  padding:25px 0;
+  text-align:center;
+  color:#718096;
+  font-size:11px;
+  line-height:2;
+}
+
+footer strong{color:#a9caff}
+
+@media(max-width:1050px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media(max-width:720px){
+  header{height:67px;padding:0 17px}
+  .brand-name{font-size:16px}
+  .header-label{display:none}
+  .layout{display:block}
+  .sidebar{
+    border-right:0;
+    border-bottom:1px solid var(--border);
+    padding:12px 14px;
+  }
+  .side-heading,.side-info{display:none}
+  .sidebar nav{
+    display:flex;
+    gap:7px;
+    overflow-x:auto;
+  }
+  .nav-btn{
+    width:auto;
+    flex-shrink:0;
+    margin:0;
+    padding:10px 12px;
+    font-size:11px;
+  }
+  main{padding:20px 16px}
+  .hero{padding:25px 0 15px}
+  .hero h1{font-size:34px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+  .resource-image{height:115px}
+  .resource-body{padding:12px}
+  .resource h3{font-size:14px}
+  .resource p{font-size:11px}
+  .resource-link{font-size:10px;padding:10px 5px}
+  .section-top h2{font-size:19px}
+}
+
+@media(max-width:390px){
+  .grid{grid-template-columns:1fr}
+  .resource-image{height:165px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">
+      <img src="https://i.supaimg.com/9a31b629-cb6b-43e4-9059-15acc47537f7/83ae613b-13a0-4061-94aa-15c5b3c97512.png" alt="AB Logo">
+    </div>
+    <div class="brand-name"><span>AB</span> DIGITAL VAULT</div>
+  </div>
+  <div class="header-label">YOUR DIGITAL WORLD</div>
+</header>
+
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="side-heading">MAIN MENU</div>
+
+  <nav>
+    <button class="nav-btn active" data-category="All">⌂ &nbsp; All Resources</button>
+    <button class="nav-btn" data-category="AI Tools">✦ &nbsp; AI Tools</button>
+    <button class="nav-btn" data-category="Software & Apps">▣ &nbsp; Software & Apps</button>
+    <button class="nav-btn" data-category="Digital Resources">▤ &nbsp; Digital Resources</button>
+  </nav>
+
+  <div class="side-info">
+    <div class="side-heading">INFORMATION</div>
+    <div class="info-line">
+      <strong>AB DIGITAL VAULT</strong>
+      Your digital collection
+    </div>
+    <div class="info-line">
+      <strong>FREE ACCESS</strong>
+      Free digital resources
+    </div>
+    <div class="info-line">
+      <strong>UPDATED COLLECTION</strong>
+      Discover new resources
+    </div>
+  </div>
+</aside>
+
+<main>
+
+<section class="hero">
+  <div class="eyebrow">WELCOME TO AB DIGITAL VAULT</div>
+  <h1>Discover Your Next <span>Digital Resource.</span></h1>
+  <p>
+    Explore useful AI tools, software, applications, PDFs, eBooks,
+    website codes, templates, guides and more.
+    Your digital world, all in one free vault.
+  </p>
+
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input id="search" type="search"
+      placeholder="Search AI tools, apps, PDFs and more...">
+  </div>
+</section>
+
+<div class="info-strip">
+  <div class="info-box">
+    <strong>AB DIGITAL VAULT</strong>
+    <span>Your digital collection</span>
+  </div>
+  <div class="info-box">
+    <strong>FREE DIGITAL RESOURCES</strong>
+    <span>Explore and discover</span>
+  </div>
+  <div class="info-box">
+    <strong>UPDATED COLLECTION</strong>
+    <span>New resources as they are added</span>
+  </div>
+</div>
+
+<div class="section-top">
+  <h2>Explore Resources</h2>
+  <div class="count" id="count">Loading resources...</div>
+</div>
+
+<div class="filters">
+  <button class="filter active" data-category="All">All</button>
+  <button class="filter" data-category="AI Tools">AI Tools</button>
+  <button class="filter" data-category="Software & Apps">Software & Apps</button>
+  <button class="filter" data-category="Digital Resources">Digital Resources</button>
+</div>
+
+<section class="grid" id="resourceGrid">
+  <div class="status">
+    <strong>Loading your vault...</strong>
+    Connecting to AB DIGITAL VAULT
+  </div>
+</section>
+
+<footer>
+  <strong>AB DIGITAL VAULT</strong><br>
+  Your Digital World. One Free Vault.<br>
+  © <span id="year"></span> AB DIGITAL VAULT. All rights reserved.
+</footer>
+
+</main>
+</div>
+
+<script>
+const SUPABASE_URL = "https://ykrmnoblmekgjzfzpbyv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_lIO0tRcNjLVD4ZKwu8lmcg_TocA4aMs";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let allResources = [];
+let activeCategory = "All";
+
+const grid = document.getElementById("resourceGrid");
+const searchInput = document.getElementById("search");
+const count = document.getElementById("count");
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+function escapeHTML(value=""){
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[c]));
+}
+
+function safeURL(value){
+  try{
+    const url = new URL(value);
+    if(url.protocol === "https:" || url.protocol === "http:"){
+      return url.href;
+    }
+  }catch(e){}
+  return "";
+}
+
+function setStatus(title, description){
+  grid.innerHTML = `
+    <div class="status">
+      <strong>${escapeHTML(title)}</strong>
+      ${escapeHTML(description)}
+    </div>
+  `;
+}
+
+function updateActiveButtons(){
+  document.querySelectorAll("[data-category]").forEach(btn => {
+    btn.classList.toggle(
+      "active",
+      btn.dataset.category === activeCategory
+    );
+  });
+}
+
+function renderResources(){
+  const search = searchInput.value.trim().toLowerCase();
+
+  const filtered = allResources.filter(item => {
+    const matchesCategory =
+      activeCategory === "All" ||
+      item.category === activeCategory;
+
+    const searchable = (
+      (item.name || "") + " " +
+      (item.description || "") + " " +
+      (item.category || "")
+    ).toLowerCase();
+
+    return matchesCategory && searchable.includes(search);
+  });
+
+  count.textContent =
+    filtered.length + " resource" +
+    (filtered.length === 1 ? "" : "s");
+
+  if(filtered.length === 0){
+    setStatus(
+      "No resources found",
+      "Try another search or select a different category."
+    );
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item => {
+    const image = safeURL(item.image_url || "");
+    const download = safeURL(item.download_url || "");
+
+    return `
+      <article class="resource">
+        <div class="resource-image">
+          ${
+            image
+            ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(item.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">`
+            : ""
+          }
+          <div class="image-placeholder"
+            style="display:${image ? "none" : "block"}">
+            AB
+          </div>
+        </div>
+
+        <div class="resource-body">
+          <span class="category-tag">
+            ${escapeHTML(item.category)}
+          </span>
+
+          <h3>${escapeHTML(item.name)}</h3>
+
+          <p>${escapeHTML(item.description || "Explore this digital resource.")}</p>
+
+          ${
+            download
+            ? `<a class="resource-link"
+                 href="${escapeHTML(download)}"
+                 target="_blank"
+                 rel="noopener noreferrer">
+                 OPEN / DOWNLOAD →
+               </a>`
+            : `<div class="resource-link">LINK UNAVAILABLE</div>`
+          }
+        </div>
+      </article>
+    `;
+  }).join("");
+}
+
+async function loadResources(){
+  setStatus(
+    "Loading your vault...",
+    "Fetching the latest resources."
+  );
+
+  const {data, error} = await db
+    .from("vault_items")
+    .select("id,name,category,description,image_url,download_url,created_at")
+    .order("created_at", {ascending:false});
+
+  if(error){
+    console.error(error);
+    setStatus(
+      "Unable to load resources",
+      "Please check your internet connection and Supabase database permissions."
+    );
+    count.textContent = "Connection error";
+    return;
+  }
+
+  allResources = data || [];
+  renderResources();
+}
+
+document.querySelectorAll("[data-category]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    activeCategory = btn.dataset.category;
+    updateActiveButtons();
+    renderResources();
+  });
+});
+
+searchInput.addEventListener("input", renderResources);
+
+loadResources();
+
+// Automatically update the public website when the database changes.
+db.channel("public-vault-updates")
+  .on(
+    "postgres_changes",
+    {
+      event: "*",
+      schema: "public",
+      table: "vault_items"
+    },
+    () => loadResources()
+  )
+  .subscribe();
+</script>
+
+</body>
+</html>
